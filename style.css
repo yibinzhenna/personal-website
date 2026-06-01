@@ -113,6 +113,8 @@ footer {
 
 footer .dot {
   color: #bbb;
+  font-size: 18px;
+  line-height: 1;
 }
 
 footer a {
