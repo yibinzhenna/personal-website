@@ -134,3 +134,16 @@ footer a:hover {
 .page.active {
   display: block;
 }
+
+.project {
+  margin-bottom: 32px;
+}
+
+.project img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  display: block;
+}
