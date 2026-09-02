@@ -134,3 +134,22 @@ footer a:hover {
 .page.active {
   display: block;
 }
+
+.project {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  margin-bottom: 48px;
+}
+
+.project img {
+  width: 360px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  display: block;
+}
+
+.project p {
+  margin: 0;
+}
