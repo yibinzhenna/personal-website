@@ -264,12 +264,18 @@
   }
 
   // The engine is 134KB of WebAssembly, so it is only fetched once someone
-  // actually opens the chess page -- not on every visit to the site.
+  // actually opens the page holding the board -- not on every visit.
+  // Keyed off whichever .page contains #chess-board, so moving the board
+  // between pages needs no change here.
   document.addEventListener('DOMContentLoaded', () => {
-    const page = document.getElementById('chess');
-    if (!page) return;
+    const board = document.getElementById('chess-board');
+    if (!board) return;
+
+    const page = board.closest('.page');
+    if (!page) { start(); return; }
+
     if (page.classList.contains('active')) start();
-    document.querySelectorAll('[data-page="chess"]').forEach((link) => {
+    document.querySelectorAll(`[data-page="${page.id}"]`).forEach((link) => {
       link.addEventListener('click', start);
     });
   });
