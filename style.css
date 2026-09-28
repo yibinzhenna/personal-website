@@ -150,7 +150,10 @@ footer a:hover {
   margin-bottom: 14px;
 }
 
-.play-button {
+/* Qualified with .content because the generic `.content a` rule is more
+   specific than a lone class, and would otherwise repaint this dark-on-dark
+   and add its underline border. */
+.content a.play-button {
   display: inline-block;
   font-size: 14px;
   font-weight: 600;
@@ -158,11 +161,13 @@ footer a:hover {
   background: #16181c;
   border: 1px solid #16181c;
   border-radius: 3px;
-  padding: 7px 16px;
+  padding: 7px 18px;
   text-decoration: none;
-  transition: opacity .12s;
+  transition: background-color .12s, border-color .12s;
 }
 
-.play-button:hover {
-  opacity: .82;
+.content a.play-button:hover {
+  background: #33383f;
+  border-color: #33383f;
+  color: #fff;
 }
