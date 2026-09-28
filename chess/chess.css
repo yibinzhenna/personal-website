@@ -1,0 +1,163 @@
+/* Chess page — tuned to match the site's light, minimal palette. */
+
+.chess-wrap {
+  --light: #e9ebee;
+  --dark: #a8b0ba;
+  --hl: rgba(60, 110, 180, 0.30);
+  --last: rgba(190, 160, 60, 0.28);
+}
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1;
+  margin: 24px 0;
+  border: 1px solid #99a1ab;
+  border-radius: 4px;
+  overflow: hidden;
+  user-select: none;
+  font-size: min(7.6vw, 34px);
+  line-height: 1;
+}
+
+.chess-board .sq {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.chess-board .sq.light { background: var(--light); }
+.chess-board .sq.dark  { background: var(--dark); }
+
+/* Solid glyphs for both sides, separated by fill and outline rather than by
+   using the hollow Unicode variants, which render inconsistently. */
+.chess-board .sq.white {
+  color: #fcfcfd;
+  text-shadow: 0 0 1px #2a2f36, 0 0 2px #2a2f36, 0 1px 1px rgba(0, 0, 0, .35);
+}
+.chess-board .sq.black {
+  color: #24282e;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, .25);
+}
+
+/* Board flips as one unit; cells counter-rotate so the pieces stay upright. */
+.chess-board.flipped { transform: rotate(180deg); }
+.chess-board.flipped .sq { transform: rotate(180deg); }
+
+.chess-board .sq.lastmove::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--last);
+  pointer-events: none;
+}
+
+.chess-board .sq.selected {
+  box-shadow: inset 0 0 0 3px rgba(60, 110, 180, .75);
+}
+
+/* A dot for a quiet destination, a ring for a capture. */
+.chess-board .sq.target::before {
+  content: '';
+  position: absolute;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background: var(--hl);
+  pointer-events: none;
+}
+
+.chess-board .sq.capture::before {
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border: 3px solid var(--hl);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.chess-board .sq.check {
+  background: radial-gradient(circle, rgba(200, 60, 60, .55) 25%, transparent 72%),
+              var(--dark);
+}
+.chess-board .sq.check.light {
+  background: radial-gradient(circle, rgba(200, 60, 60, .55) 25%, transparent 72%),
+              var(--light);
+}
+
+/* Controls */
+.chess-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.chess-controls label {
+  font-size: 14px;
+  color: #555;
+}
+
+.chess-controls select,
+.chess-controls button {
+  font: inherit;
+  font-size: 14px;
+  color: #111;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.chess-controls button:hover:not(:disabled),
+.chess-controls select:hover {
+  border-color: #111;
+}
+
+.chess-controls button:disabled {
+  color: #aaa;
+  cursor: default;
+  border-color: #ddd;
+}
+
+.chess-status {
+  font-size: 15px;
+  color: #222;
+  min-height: 24px;
+  font-weight: 600;
+}
+
+/* Promotion picker */
+.chess-promotion {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chess-promotion button {
+  font-size: 30px;
+  line-height: 1;
+  width: 48px;
+  height: 48px;
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chess-promotion button:hover { border-color: #111; }
+.chess-promotion button.white { color: #fcfcfd; text-shadow: 0 0 1px #2a2f36, 0 0 2px #2a2f36; }
+.chess-promotion button.black { color: #24282e; }
+
+.chess-note {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+}
