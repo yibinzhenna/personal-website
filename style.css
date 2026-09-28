@@ -135,21 +135,34 @@ footer a:hover {
   display: block;
 }
 
-.project {
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  margin-bottom: 48px;
+.project-entry {
+  margin-bottom: 36px;
 }
 
-.project img {
-  width: 360px;
-  flex-shrink: 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  display: block;
+.project-entry h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.project p {
-  margin: 0;
+.project-entry p {
+  color: #444;
+  margin-bottom: 14px;
+}
+
+.play-button {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: #16181c;
+  border: 1px solid #16181c;
+  border-radius: 3px;
+  padding: 7px 16px;
+  text-decoration: none;
+  transition: opacity .12s;
+}
+
+.play-button:hover {
+  opacity: .82;
 }

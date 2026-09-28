@@ -239,7 +239,7 @@
     buildBoard();
     el.status.textContent = 'Loading engine…';
 
-    worker = new Worker('chess/engine-worker.js');
+    worker = new Worker('engine-worker.js');
     worker.onmessage = onMessage;
     worker.onerror = (err) => {
       el.status.textContent = 'Engine failed to load.';
@@ -263,20 +263,9 @@
     });
   }
 
-  // The engine is 134KB of WebAssembly, so it is only fetched once someone
-  // actually opens the page holding the board -- not on every visit.
-  // Keyed off whichever .page contains #chess-board, so moving the board
-  // between pages needs no change here.
+  // This script only ships on the chess page, so the engine downloads exactly
+  // when someone asks to play -- never on a visit to the rest of the site.
   document.addEventListener('DOMContentLoaded', () => {
-    const board = document.getElementById('chess-board');
-    if (!board) return;
-
-    const page = board.closest('.page');
-    if (!page) { start(); return; }
-
-    if (page.classList.contains('active')) start();
-    document.querySelectorAll(`[data-page="${page.id}"]`).forEach((link) => {
-      link.addEventListener('click', start);
-    });
+    if (document.getElementById('chess-board')) start();
   });
 })();

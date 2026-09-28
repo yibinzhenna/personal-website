@@ -1,0 +1,186 @@
+/* Chess page — minimal, matched to the site's light palette. */
+
+.chess-wrap {
+  /* One source of truth for the board's size. Because the grid declares both
+     explicit rows and columns, every square is exactly 1/8 of this and never
+     resizes as pieces move on and off a rank. */
+  --board: min(440px, calc(100vw - 48px));
+  --light: #e9eaec;
+  --dark: #b6bcc4;
+  --ink: #16181c;
+  --mark: rgba(22, 24, 28, .26);
+}
+
+.chess-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.chess-lede {
+  color: #555;
+  margin-bottom: 28px;
+  max-width: 52ch;
+}
+
+/* Board ------------------------------------------------------------------ */
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);   /* without this, rows size to content */
+  width: var(--board);
+  height: var(--board);
+  border-radius: 3px;
+  overflow: hidden;
+  user-select: none;
+  font-size: calc(var(--board) / 8 * 0.78);
+  line-height: 1;
+}
+
+.chess-board .sq {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;      /* a glyph can never push the grid around */
+}
+
+.chess-board .sq.light { background: var(--light); }
+.chess-board .sq.dark  { background: var(--dark); }
+
+/* Solid glyphs for both sides, separated by fill and outline. The hollow
+   Unicode variants render inconsistently across platforms. */
+.chess-board .sq.white {
+  color: #fdfdfd;
+  text-shadow: 0 0 1px var(--ink), 0 0 2px var(--ink);
+}
+.chess-board .sq.black { color: var(--ink); }
+
+/* Board flips as one unit; cells counter-rotate so pieces stay upright. */
+.chess-board.flipped { transform: rotate(180deg); }
+.chess-board.flipped .sq { transform: rotate(180deg); }
+
+/* Markers ---------------------------------------------------------------- */
+
+.chess-board .sq.lastmove::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 24, 28, .12);
+  pointer-events: none;
+}
+
+.chess-board .sq.selected {
+  box-shadow: inset 0 0 0 2px rgba(22, 24, 28, .55);
+}
+
+.chess-board .sq.target::before {
+  content: '';
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+  background: var(--mark);
+  pointer-events: none;
+}
+
+.chess-board .sq.capture::before {
+  content: '';
+  position: absolute;
+  inset: 7%;
+  border: 2px solid var(--mark);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.chess-board .sq.check::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(184, 58, 58, .5) 28%, transparent 72%);
+  pointer-events: none;
+}
+
+/* Controls --------------------------------------------------------------- */
+
+.chess-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: var(--board);
+  margin-bottom: 14px;
+}
+
+.chess-controls select,
+.chess-controls button {
+  font: inherit;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+  border: 1px solid #c4c8ce;
+  border-radius: 3px;
+  padding: 5px 11px;
+  cursor: pointer;
+  transition: border-color .12s, color .12s;
+}
+
+.chess-controls select:hover,
+.chess-controls button:hover:not(:disabled) {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.chess-controls button:disabled {
+  color: #b5b9bf;
+  border-color: #dfe2e6;
+  cursor: default;
+}
+
+/* Status ----------------------------------------------------------------- */
+
+.chess-statusbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: var(--board);
+  min-height: 34px;
+  margin-top: 14px;
+}
+
+.chess-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.chess-promotion {
+  display: flex;
+  gap: 4px;
+}
+
+.chess-promotion[hidden] { display: none; }
+
+.chess-promotion button {
+  font-size: 22px;
+  line-height: 1;
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 1px solid #c4c8ce;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.chess-promotion button:hover { border-color: var(--ink); }
+.chess-promotion button.white { color: #fdfdfd; text-shadow: 0 0 1px var(--ink), 0 0 2px var(--ink); }
+.chess-promotion button.black { color: var(--ink); }
+
+.chess-note {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}

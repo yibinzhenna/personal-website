@@ -6,7 +6,6 @@
   <meta name="description" content="Yibin's personal website" />
   <title>Yibin Zhen</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="chess/chess.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -46,42 +45,22 @@
  
     <!-- Projects -->
     <div class="page" id="projects">
-      <div class="content chess-wrap">
-        <p>
-          <a href="https://github.com/yibinzhenna/chess-engine">Chess Engine</a>
-          A chess engine written in C++, compiled to WebAssembly so it runs
-          entirely in your browser — no server involved. Move generation is
-          verified against the standard perft suite, and the difficulty levels
-          work by layering handicaps rather than just capping search depth.
-        </p>
+      <div class="content">
 
-        <div class="chess-controls">
-          <label for="chess-difficulty">Difficulty</label>
-          <select id="chess-difficulty">
-            <option value="0">Beginner</option>
-            <option value="1" selected>Intermediate</option>
-            <option value="2">Advanced</option>
-            <option value="3">Magnus Carlsen</option>
-          </select>
-
-          <label for="chess-side">Play as</label>
-          <select id="chess-side">
-            <option value="0" selected>White</option>
-            <option value="1">Black</option>
-          </select>
-
-          <button id="chess-new" type="button">New game</button>
-          <button id="chess-undo" type="button" disabled>Undo</button>
+        <div class="project-entry">
+          <h2>Chess Engine</h2>
+          <p>
+            A chess engine written in C++, compiled to WebAssembly so it runs
+            entirely in your browser. Move generation is verified against the
+            standard perft suite, and four difficulty levels are built by
+            layering handicaps rather than just capping search depth.
+          </p>
+          <a class="play-button" href="chess-engine/">Play</a>
         </div>
 
-        <div class="chess-status" id="chess-status">Loading engine…</div>
-        <div class="chess-promotion" id="chess-promotion" hidden></div>
-        <div class="chess-board" id="chess-board"></div>
-
-        <p class="chess-note">Click a piece, then click where you want it to go.</p>
       </div>
     </div>
-
+ 
     <footer>
       <a href="mailto:yibinzhe@usc.edu"><i class="fa-solid fa-envelope"></i> yibinzhe@usc.edu</a>
       <span class="dot">•</span>
@@ -93,6 +72,5 @@
   </div>
  
   <script src="script.js"></script>
-  <script src="chess/chess.js"></script>
 </body>
 </html>
