@@ -39,11 +39,10 @@
 .chess-back:hover { color: var(--ink); }
 
 .chess-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 36px;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
   margin-bottom: 10px;
 }
 
@@ -181,9 +180,8 @@
 }
 
 .chess-status {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 20px;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--ink);
 }
 
