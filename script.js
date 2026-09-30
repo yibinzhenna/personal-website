@@ -1,19 +1,17 @@
-const navLinks = document.querySelectorAll('nav a[data-page], header a[data-page]');
+// Shared by the main page and the chess page. Everything below checks that
+// its elements exist, so pages only get the parts they actually have.
+
 const pages = document.querySelectorAll('.page');
 
 function showPage(target) {
-  // Update active nav link (only nav links, not the name)
-  document.querySelectorAll('nav a[data-page]').forEach(l => l.classList.remove('active'));
-  const matchingNav = document.querySelector(`nav a[data-page="${target}"]`);
-  if (matchingNav) matchingNav.classList.add('active');
+  // Only nav links carry the active marker, not the name or inline links.
+  document.querySelectorAll('nav a[data-page]').forEach(l =>
+    l.classList.toggle('active', l.dataset.page === target));
 
-  // Show target page
-  pages.forEach(p => p.classList.remove('active'));
-  const targetPage = document.getElementById(target);
-  if (targetPage) targetPage.classList.add('active');
+  pages.forEach(p => p.classList.toggle('active', p.id === target));
 }
 
-navLinks.forEach(link => {
+document.querySelectorAll('a[data-page]').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
     const target = link.dataset.page;
@@ -28,4 +26,36 @@ navLinks.forEach(link => {
 // Honour a hash on arrival, so links like /#projects (used by the chess page's
 // nav) open the right section instead of always landing on home.
 const initial = location.hash.slice(1);
-if (initial && document.getElementById(initial)) showPage(initial);
+if (initial && document.getElementById(initial) && pages.length) showPage(initial);
+
+// Local time in LA, lowercase to match everything else.
+const clock = document.getElementById('clock');
+if (clock) {
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+  const tick = () => { clock.textContent = fmt.format(new Date()).toLowerCase() + ' in los angeles'; };
+  tick();
+  setInterval(tick, 15000);
+}
+
+// Light / dark switch. With nothing saved, the system setting decides.
+const toggle = document.getElementById('theme-toggle');
+if (toggle) {
+  const root = document.documentElement;
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => (root.dataset.theme || (systemDark.matches ? 'dark' : 'light')) === 'dark';
+  const label = () => { toggle.textContent = isDark() ? 'light' : 'dark'; };
+
+  toggle.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('theme', next); } catch (e) {}
+    label();
+  });
+
+  systemDark.addEventListener('change', label);
+  label();
+}

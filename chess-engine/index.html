@@ -3,70 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A chess engine written in C++, compiled to WebAssembly." />
-  <title>Chess Engine — Yibin Zhen</title>
+  <meta name="description" content="a chess engine written in c++, compiled to webassembly." />
+  <title>chess engine · yibin zhen</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%236b8f71'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&family=Instrument+Serif:ital@0;1&display=swap" />
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="chess.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
 </head>
 <body>
   <div class="container">
 
     <header>
-      <a href="../" class="name">Yibin Zhen</a>
+      <a href="../" class="name">yibin zhen</a>
       <nav>
         <a href="../">home</a>
-        <span class="sep"> ⁄ </span>
-        <a href="../#projects">projects</a>
+        <a href="../#about">about</a>
+        <a href="../#projects" class="active">projects</a>
       </nav>
     </header>
 
-    <div class="content chess-wrap">
+    <main class="chess-wrap">
 
-      <h1 class="chess-title">Chess Engine</h1>
+      <a class="chess-back" href="../#projects">← projects</a>
+
+      <h1 class="chess-title">chess engine</h1>
       <p class="chess-lede">
-        Written in C++, compiled to WebAssembly — the engine runs entirely in
-        your browser, with no server involved.
+        written in c++ and compiled to webassembly, so it runs entirely in your
+        browser. no server involved.
       </p>
 
       <div class="chess-controls">
         <select id="chess-difficulty" aria-label="Difficulty">
-          <option value="0">Beginner</option>
-          <option value="1" selected>Intermediate</option>
-          <option value="2">Advanced</option>
-          <option value="3">Magnus Carlsen</option>
+          <option value="0">beginner</option>
+          <option value="1" selected>intermediate</option>
+          <option value="2">advanced</option>
+          <option value="3">magnus carlsen</option>
         </select>
 
         <select id="chess-side" aria-label="Play as">
-          <option value="0" selected>as White</option>
-          <option value="1">as Black</option>
+          <option value="0" selected>as white</option>
+          <option value="1">as black</option>
         </select>
 
-        <button id="chess-new" type="button">New game</button>
-        <button id="chess-undo" type="button" disabled>Undo</button>
+        <button id="chess-new" type="button">new game</button>
+        <button id="chess-undo" type="button" disabled>undo</button>
       </div>
 
       <div class="chess-board" id="chess-board"></div>
 
       <div class="chess-statusbar">
-        <span class="chess-status" id="chess-status">Loading engine…</span>
+        <span class="chess-status" id="chess-status">loading engine…</span>
         <span class="chess-promotion" id="chess-promotion" hidden></span>
       </div>
 
-      <p class="chess-note">Click a piece, then click where you want it to go.</p>
+      <p class="chess-note">click a piece, then click where it should go.</p>
 
-    </div>
+    </main>
 
     <footer>
-      <a href="mailto:yibinzhe@usc.edu"><i class="fa-solid fa-envelope"></i> yibinzhe@usc.edu</a>
-      <span class="dot">•</span>
-      <a href="https://github.com/yibinzhenna"><i class="fa-brands fa-github"></i> yibinzhenna</a>
-      <span class="dot">•</span>
-      <a href="https://www.linkedin.com/in/yibinzhen/"><i class="fa-brands fa-linkedin"></i> Yibin Zhen</a>
+      <div class="links">
+        <a href="mailto:yibinzhe@usc.edu">email</a>
+        <a href="https://github.com/yibinzhenna">github</a>
+        <a href="https://www.linkedin.com/in/yibinzhen/">linkedin</a>
+      </div>
+      <button type="button" id="theme-toggle" aria-label="Toggle light and dark theme">dark</button>
     </footer>
 
   </div>
 
+  <script src="../script.js"></script>
   <script src="chess.js"></script>
 </body>
 </html>

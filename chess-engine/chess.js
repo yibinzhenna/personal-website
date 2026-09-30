@@ -71,16 +71,16 @@
     switch (state.status) {
       case 1: {
         const userLost = state.turn === playerColor;
-        text = userLost ? 'Checkmate — the engine wins.' : 'Checkmate — you win!';
+        text = userLost ? 'checkmate. the engine wins.' : 'checkmate. you win.';
         break;
       }
-      case 2: text = 'Stalemate — draw.'; break;
-      case 3: text = 'Draw by the fifty-move rule.'; break;
-      case 4: text = 'Draw — insufficient material.'; break;
+      case 2: text = 'stalemate. a draw.'; break;
+      case 3: text = 'draw by the fifty-move rule.'; break;
+      case 4: text = 'draw. not enough material left.'; break;
       default:
-        if (thinking) text = 'Thinking…';
-        else if (state.inCheck) text = yourTurn ? 'You are in check.' : 'Check!';
-        else text = yourTurn ? 'Your move.' : 'Engine to move.';
+        if (thinking) text = 'thinking…';
+        else if (state.inCheck) text = yourTurn ? 'you are in check.' : 'check.';
+        else text = yourTurn ? 'your move.' : 'engine to move.';
     }
 
     el.status.textContent = text;
@@ -164,7 +164,7 @@
 
     switch (msg.type) {
       case 'ready':
-        el.status.textContent = 'Your move.';
+        el.status.textContent = 'your move.';
         thinking = false;
         render();
         break;
@@ -237,12 +237,12 @@
     el.promotion = document.getElementById('chess-promotion');
 
     buildBoard();
-    el.status.textContent = 'Loading engine…';
+    el.status.textContent = 'loading engine…';
 
     worker = new Worker('engine-worker.js');
     worker.onmessage = onMessage;
     worker.onerror = (err) => {
-      el.status.textContent = 'Engine failed to load.';
+      el.status.textContent = "the engine didn't load. try refreshing.";
       console.error('chess worker:', err.message || err);
     };
 
