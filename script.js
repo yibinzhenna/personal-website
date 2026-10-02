@@ -52,6 +52,43 @@ document.querySelectorAll('.peek-toggle').forEach(btn => {
 
   btn.addEventListener('click', () => setOpen(!shot.classList.contains('open')));
 
+  // With a mouse, the figure follows the cursor while it is over the
+  // trigger. pointerType filters out the synthetic mouse events a tap
+  // fires, so touch keeps the click toggle above instead.
+  const GAP = 18;
+  const EDGE = 12;
+
+  const place = (x, y) => {
+    const w = shot.offsetWidth;
+    const h = shot.offsetHeight;
+    // Flip to the other side of the cursor rather than hang off the edge.
+    let left = x + GAP + w > innerWidth - EDGE ? x - GAP - w : x + GAP;
+    let top = y + GAP + h > innerHeight - EDGE ? y - GAP - h : y + GAP;
+    shot.style.left = Math.max(EDGE, left) + 'px';
+    shot.style.top = Math.max(EDGE, top) + 'px';
+  };
+
+  btn.addEventListener('pointerenter', e => {
+    if (e.pointerType !== 'mouse') return;
+    shot.classList.add('follow');
+    place(e.clientX, e.clientY);   // after .follow, so it has a size
+  });
+
+  btn.addEventListener('pointermove', e => {
+    if (e.pointerType === 'mouse' && shot.classList.contains('follow')) {
+      place(e.clientX, e.clientY);
+    }
+  });
+
+  const unfollow = () => {
+    shot.classList.remove('follow');
+    shot.style.left = shot.style.top = '';
+  };
+
+  btn.addEventListener('pointerleave', unfollow);
+  // A scroll moves the trigger out from under a cursor that never left it.
+  window.addEventListener('scroll', unfollow, { passive: true });
+
   // Tapping anywhere else, or Escape, puts it away again.
   document.addEventListener('click', e => {
     if (!btn.contains(e.target) && !shot.contains(e.target)) setOpen(false);

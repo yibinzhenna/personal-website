@@ -395,34 +395,33 @@ button.go {
   display: block;
 }
 
-/* With a mouse it floats on hover instead, so nothing below it moves.
-   :has keeps the trigger in the heading and the figure after the text. */
-@media (hover: hover) and (pointer: fine) {
-  .project > div {
-    position: relative;
-  }
+/* With a mouse the figure follows the cursor, so it reads as a peek rather
+   than a layout change. JS positions it and adds .follow; a media query is
+   not enough, since a touchscreen laptop reports a coarse pointer and would
+   never get the hover path at all. */
+.peek-shot.follow {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  margin: 0;
+  pointer-events: none;   /* never steals the pointerleave that hides it */
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .45);
+}
 
-  .peek-shot {
-    display: block;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    z-index: 5;
-    margin: 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-4px);
-    transition: opacity .18s, transform .18s, visibility .18s;
-    box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .45);
-  }
+/* The trigger is a button, so state its own chrome rather than inheriting
+   whatever grey the platform paints on a default button face. */
+.peek-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  color: var(--ink);
+}
 
-  .project > div:has(.peek-toggle:hover) .peek-shot,
-  .project > div:has(.peek-toggle:focus-visible) .peek-shot,
-  .peek-shot.open {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
-  }
+.peek-toggle:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
