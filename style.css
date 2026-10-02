@@ -399,6 +399,23 @@ button.go {
    of the project markup: nested, any ancestor transform would turn
    position: fixed into position-relative-to-that-ancestor. JS moves it
    with a transform and toggles .on. */
+/* The trigger is ~30x17px of text, which is a hard thing to land on with
+   a mouse on a wide screen. Grow the area that counts as hovering it,
+   for every pointer rather than only coarse ones. */
+.project .go {
+  position: relative;
+}
+
+.project .go::before {
+  content: '';
+  position: absolute;
+  inset: -16px -18px;
+}
+
+.peek-toggle {
+  cursor: help;   /* says "look", not "navigate" like the play links */
+}
+
 .peek-layer {
   position: fixed;
   left: 0;
@@ -470,14 +487,4 @@ button.go {
     position: relative;
   }
 
-  /* The project "play" and "ui" controls are ~17px of text on their own. */
-  .project .go::before {
-    content: '';
-    position: absolute;
-    inset: -14px -10px;
-  }
-
-  .project .go {
-    position: relative;
-  }
 }

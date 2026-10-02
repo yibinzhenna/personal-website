@@ -82,10 +82,13 @@ if (document.querySelector('.peek-toggle')) {
     shown = null;
   };
 
-  window.addEventListener('pointermove', e => {
-    if (e.pointerType !== 'mouse') return;   // a tap uses the toggle instead
+  // Both pointermove and mousemove feed this, so the preview does not
+  // depend on one event type behaving as expected in a given browser.
+  // touchPointer suppresses the mousemove a tap synthesises afterwards.
+  let touchPointer = false;
 
-    const trigger = e.target.closest && e.target.closest('.peek-toggle');
+  const track = (clientX, clientY, target) => {
+    const trigger = target && target.closest && target.closest('.peek-toggle');
     const shot = trigger && document.getElementById(trigger.getAttribute('aria-controls'));
     const img = shot && shot.querySelector('img');
     if (!img) return hide();
@@ -101,11 +104,20 @@ if (document.querySelector('.peek-toggle')) {
     // Flip to the other side of the cursor rather than hang off an edge.
     const w = layer.offsetWidth;
     const h = layer.offsetHeight;
-    let x = e.clientX + GAP + w > innerWidth - EDGE ? e.clientX - GAP - w : e.clientX + GAP;
-    let y = e.clientY + GAP + h > innerHeight - EDGE ? e.clientY - GAP - h : e.clientY + GAP;
-    x = Math.max(EDGE, x);
-    y = Math.max(EDGE, y);
-    layer.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    let x = clientX + GAP + w > innerWidth - EDGE ? clientX - GAP - w : clientX + GAP;
+    let y = clientY + GAP + h > innerHeight - EDGE ? clientY - GAP - h : clientY + GAP;
+    layer.style.transform =
+      'translate3d(' + Math.max(EDGE, x) + 'px, ' + Math.max(EDGE, y) + 'px, 0)';
+  };
+
+  window.addEventListener('pointermove', e => {
+    touchPointer = e.pointerType !== 'mouse';
+    if (touchPointer) return hide();
+    track(e.clientX, e.clientY, e.target);
+  }, { passive: true });
+
+  window.addEventListener('mousemove', e => {
+    if (!touchPointer) track(e.clientX, e.clientY, e.target);
   }, { passive: true });
 
   // The trigger can move out from under a cursor that never moved.
