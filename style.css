@@ -68,6 +68,9 @@ body {
   max-width: 560px;
   margin: 0 auto;
   min-height: calc(100vh - clamp(40px, 11vh, 120px) - 56px);
+  /* dvh follows the visible viewport. 100vh is the taller address-bar-hidden
+     height on mobile, which leaves a strip of phantom scroll. */
+  min-height: calc(100dvh - clamp(40px, 11vh, 120px) - 56px);
   display: flex;
   flex-direction: column;
 }
@@ -326,10 +329,20 @@ footer button {
   padding: 0;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+  /* 480px, not 420px: current large phones report 428-430px wide and
+     were missing every rule in this block. */
+
+  /* The desktop vertical rhythm pushes content - the chess board worst
+     of all - below the fold on a phone. */
+  body {
+    padding-top: 28px;
+  }
+
   header {
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 40px;
   }
 
   .facts {
@@ -343,5 +356,25 @@ footer button {
 
   .project .year {
     padding: 0 0 4px;
+  }
+}
+
+/* Touch targets ---------------------------------------------------------- */
+
+/* Links here are 20-25px tall, well under the 44px minimum a fingertip
+   needs. A transparent ::before grows the tappable area without moving
+   anything, and pointer: coarse keeps hover on a mouse honest. */
+@media (pointer: coarse) {
+  nav a::before,
+  footer a::before,
+  footer button::before {
+    content: '';
+    position: absolute;
+    inset: -12px -8px;
+  }
+
+  footer a,
+  footer button {
+    position: relative;
   }
 }

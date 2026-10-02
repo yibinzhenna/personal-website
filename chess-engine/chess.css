@@ -214,3 +214,49 @@
   color: var(--faint);
   margin-top: 6px;
 }
+
+/* Mobile ----------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  /* Cap the board by height too, so the whole thing is on screen when the
+     page loads rather than running past the fold. Floor of 240px so it
+     stays playable on a very short screen; dvh for the visible viewport. */
+  .chess-wrap {
+    --board: min(calc(100vw - 40px), max(240px, calc(100vh - 400px)));
+    --board: min(calc(100vw - 40px), max(240px, calc(100dvh - 400px)));
+  }
+
+  .chess-back { margin-bottom: 14px; }
+  .chess-lede { margin-bottom: 14px; }
+
+  /* Not var(--board): once the board shrinks to fit a short screen, a
+     board-width control row wraps onto an extra line and pushes the
+     board down again, shrinking it further. */
+  .chess-controls,
+  .chess-statusbar {
+    width: 100%;
+  }
+}
+
+@media (pointer: coarse) {
+  .chess-controls select,
+  .chess-controls button {
+    padding: 11px 14px;
+    min-height: 44px;
+  }
+
+  .chess-promotion button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .chess-back {
+    position: relative;
+  }
+
+  .chess-back::before {
+    content: '';
+    position: absolute;
+    inset: -12px -8px;
+  }
+}

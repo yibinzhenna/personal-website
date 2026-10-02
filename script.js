@@ -18,8 +18,12 @@ document.querySelectorAll('a[data-page]').forEach(link => {
     showPage(target);
 
     // Keep the URL shareable and let other pages link straight to a section.
-    // replaceState rather than assigning location.hash, which would scroll.
-    history.replaceState(null, '', target === 'home' ? location.pathname : '#' + target);
+    // pushState rather than replaceState, so back steps between sections
+    // instead of leaving the site; assigning location.hash would scroll.
+    // Re-clicking the current section would only stack duplicate entries.
+    if ((location.hash.slice(1) || 'home') !== target) {
+      history.pushState(null, '', target === 'home' ? location.pathname : '#' + target);
+    }
   });
 });
 
@@ -27,6 +31,12 @@ document.querySelectorAll('a[data-page]').forEach(link => {
 // nav) open the right section instead of always landing on home.
 const initial = location.hash.slice(1);
 if (initial && document.getElementById(initial) && pages.length) showPage(initial);
+
+// Back and forward then move between sections rather than off the site.
+window.addEventListener('popstate', () => {
+  const id = location.hash.slice(1) || 'home';
+  if (pages.length && document.getElementById(id)) showPage(id);
+});
 
 // Local time in LA, lowercase to match everything else.
 const clock = document.getElementById('clock');
