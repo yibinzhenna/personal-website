@@ -52,43 +52,6 @@ document.querySelectorAll('.peek-toggle').forEach(btn => {
 
   btn.addEventListener('click', () => setOpen(!shot.classList.contains('open')));
 
-  // With a mouse, the figure follows the cursor while it is over the
-  // trigger. pointerType filters out the synthetic mouse events a tap
-  // fires, so touch keeps the click toggle above instead.
-  const GAP = 18;
-  const EDGE = 12;
-
-  const place = (x, y) => {
-    const w = shot.offsetWidth;
-    const h = shot.offsetHeight;
-    // Flip to the other side of the cursor rather than hang off the edge.
-    let left = x + GAP + w > innerWidth - EDGE ? x - GAP - w : x + GAP;
-    let top = y + GAP + h > innerHeight - EDGE ? y - GAP - h : y + GAP;
-    shot.style.left = Math.max(EDGE, left) + 'px';
-    shot.style.top = Math.max(EDGE, top) + 'px';
-  };
-
-  btn.addEventListener('pointerenter', e => {
-    if (e.pointerType !== 'mouse') return;
-    shot.classList.add('follow');
-    place(e.clientX, e.clientY);   // after .follow, so it has a size
-  });
-
-  btn.addEventListener('pointermove', e => {
-    if (e.pointerType === 'mouse' && shot.classList.contains('follow')) {
-      place(e.clientX, e.clientY);
-    }
-  });
-
-  const unfollow = () => {
-    shot.classList.remove('follow');
-    shot.style.left = shot.style.top = '';
-  };
-
-  btn.addEventListener('pointerleave', unfollow);
-  // A scroll moves the trigger out from under a cursor that never left it.
-  window.addEventListener('scroll', unfollow, { passive: true });
-
   // Tapping anywhere else, or Escape, puts it away again.
   document.addEventListener('click', e => {
     if (!btn.contains(e.target) && !shot.contains(e.target)) setOpen(false);
@@ -98,6 +61,58 @@ document.querySelectorAll('.peek-toggle').forEach(btn => {
     if (e.key === 'Escape') setOpen(false);
   });
 });
+
+// The mouse version of the peek is a cursor layer: one fixed element on
+// <body>, moved with a transform. Tracking is a single listener on the
+// window that hit-tests with closest(), rather than pointerenter on each
+// trigger -- the triggers are ~30x17px, and enter/leave on a target that
+// small drops the pointer easily.
+if (document.querySelector('.peek-toggle')) {
+  const layer = document.createElement('div');
+  layer.className = 'peek-layer';
+  layer.setAttribute('aria-hidden', 'true');   // the in-flow figure is the real one
+  document.body.appendChild(layer);
+
+  const GAP = 18;
+  const EDGE = 12;
+  let shown = null;
+
+  const hide = () => {
+    layer.classList.remove('on');
+    shown = null;
+  };
+
+  window.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;   // a tap uses the toggle instead
+
+    const trigger = e.target.closest && e.target.closest('.peek-toggle');
+    const shot = trigger && document.getElementById(trigger.getAttribute('aria-controls'));
+    const img = shot && shot.querySelector('img');
+    if (!img) return hide();
+
+    if (shown !== img) {
+      const copy = img.cloneNode();
+      copy.removeAttribute('loading');   // it is needed this instant
+      layer.replaceChildren(copy);
+      shown = img;
+    }
+    layer.classList.add('on');
+
+    // Flip to the other side of the cursor rather than hang off an edge.
+    const w = layer.offsetWidth;
+    const h = layer.offsetHeight;
+    let x = e.clientX + GAP + w > innerWidth - EDGE ? e.clientX - GAP - w : e.clientX + GAP;
+    let y = e.clientY + GAP + h > innerHeight - EDGE ? e.clientY - GAP - h : e.clientY + GAP;
+    x = Math.max(EDGE, x);
+    y = Math.max(EDGE, y);
+    layer.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+  }, { passive: true });
+
+  // The trigger can move out from under a cursor that never moved.
+  window.addEventListener('scroll', hide, { passive: true });
+  window.addEventListener('blur', hide);
+  document.addEventListener('pointerleave', hide);
+}
 
 // Local time in LA, lowercase to match everything else.
 const clock = document.getElementById('clock');

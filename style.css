@@ -395,19 +395,42 @@ button.go {
   display: block;
 }
 
-/* With a mouse the figure follows the cursor, so it reads as a peek rather
-   than a layout change. JS positions it and adds .follow; a media query is
-   not enough, since a touchscreen laptop reports a coarse pointer and would
-   never get the hover path at all. */
-.peek-shot.follow {
-  display: block;
+/* The cursor-following preview is its own fixed layer on <body>, not part
+   of the project markup: nested, any ancestor transform would turn
+   position: fixed into position-relative-to-that-ancestor. JS moves it
+   with a transform and toggles .on. */
+.peek-layer {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 20;
-  margin: 0;
-  pointer-events: none;   /* never steals the pointerleave that hides it */
+  z-index: 9999;
+  pointer-events: none;
+  padding: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
   box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .14s ease-out;
+  will-change: transform;
+}
+
+.peek-layer.on {
+  opacity: 1;
+  visibility: visible;
+}
+
+.peek-layer img {
+  display: block;
+  width: 351px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peek-layer { transition: none; }
 }
 
 /* The trigger is a button, so state its own chrome rather than inheriting
