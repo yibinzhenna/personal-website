@@ -38,6 +38,30 @@ window.addEventListener('popstate', () => {
   if (pages.length && document.getElementById(id)) showPage(id);
 });
 
+// A "ui" button reveals a screenshot. Hover covers this on a mouse (CSS),
+// but a tap has no hover state and the keyboard needs a real control, so
+// both get an explicit toggle.
+document.querySelectorAll('.peek-toggle').forEach(btn => {
+  const shot = document.getElementById(btn.getAttribute('aria-controls'));
+  if (!shot) return;
+
+  const setOpen = open => {
+    shot.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  };
+
+  btn.addEventListener('click', () => setOpen(!shot.classList.contains('open')));
+
+  // Tapping anywhere else, or Escape, puts it away again.
+  document.addEventListener('click', e => {
+    if (!btn.contains(e.target) && !shot.contains(e.target)) setOpen(false);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+});
+
 // Local time in LA, lowercase to match everything else.
 const clock = document.getElementById('clock');
 if (clock) {

@@ -359,6 +359,76 @@ footer button {
   }
 }
 
+/* Screenshot peek ------------------------------------------------------- */
+
+/* .go was written for links; a button needs its own chrome removed to
+   match the "play" links beside it. */
+button.go {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* In the flow by default, so a tap on a narrow screen can never place it
+   off the edge. JS adds .open. */
+.peek-shot {
+  display: none;
+  margin-top: 14px;
+  padding: 6px;
+  width: max-content;
+  max-width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.peek-shot img {
+  display: block;
+  width: 351px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+
+.peek-shot.open {
+  display: block;
+}
+
+/* With a mouse it floats on hover instead, so nothing below it moves.
+   :has keeps the trigger in the heading and the figure after the text. */
+@media (hover: hover) and (pointer: fine) {
+  .project > div {
+    position: relative;
+  }
+
+  .peek-shot {
+    display: block;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 5;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity .18s, transform .18s, visibility .18s;
+    box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .45);
+  }
+
+  .project > div:has(.peek-toggle:hover) .peek-shot,
+  .project > div:has(.peek-toggle:focus-visible) .peek-shot,
+  .peek-shot.open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .peek-shot { transition: none; }
+}
+
 /* Touch targets ---------------------------------------------------------- */
 
 /* Links here are 20-25px tall, well under the 44px minimum a fingertip
@@ -375,6 +445,17 @@ footer button {
 
   footer a,
   footer button {
+    position: relative;
+  }
+
+  /* The project "play" and "ui" controls are ~17px of text on their own. */
+  .project .go::before {
+    content: '';
+    position: absolute;
+    inset: -14px -10px;
+  }
+
+  .project .go {
     position: relative;
   }
 }
